@@ -1,4 +1,4 @@
-# ---> ArchLinuxPackages
+# ---> AUR
 *.tar
 *.tar.*
 *.jar
@@ -11,5 +11,4 @@
 *.sig
 
 pkg/
-src/
 
