@@ -1,7 +1,7 @@
 pkgname=wayland-defuser
 pkgver=1
 pkgrel=2
-pkgdesc='Makes Wayland go away (until it is usuable, aka never)'
+pkgdesc='Makes Wayland go away (until it is usable, aka never)'
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 license=('WTFPL')
 provides=('wayland' 'wayland-protocols')
