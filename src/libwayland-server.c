@@ -214,7 +214,6 @@ wl_resource_post_error(struct wl_resource *resource,
 static void
 destroy_client_with_error(struct wl_client *client, const char *reason)
 {
-	wl_log("%s (pid %u)\n", reason, client->pid);
 	wl_client_destroy(client);
 }
 
@@ -349,7 +348,7 @@ wl_client_get_credentials(struct wl_client *client,
 WL_EXPORT int
 wl_client_get_fd(struct wl_client *client)
 {
-	return wl_connection_get_fd(client->connection);
+	return -1;
 }
 
 /** Look up an object in the client name space
@@ -422,6 +421,12 @@ resource_is_deprecated(struct wl_resource *resource)
 		return true;
 
 	return false;
+}
+
+static inline void
+wl_signal_emit(struct wl_signal *signal, void *data)
+{
+	/* NO-OP */
 }
 
 static enum wl_iterator_result
@@ -547,8 +552,6 @@ WL_EXPORT struct wl_listener *
 wl_resource_get_destroy_listener(struct wl_resource *resource,
 								 wl_notify_func_t notify)
 {
-	if (resource_is_deprecated(resource))
-		return wl_signal_get(&resource->deprecated_destroy_signal, notify);
 	return wl_priv_signal_get(&resource->destroy_signal, notify);
 }
 

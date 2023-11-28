@@ -16,6 +16,44 @@
 #define WL_DISPLAY_ERROR 0
 #define WL_DISPLAY_DELETE_ID 1
 
+/**
+ * Retrieves a pointer to a containing struct, given a member name.
+ *
+ * This macro allows "conversion" from a pointer to a member to its containing
+ * struct. This is useful if you have a contained item like a wl_list,
+ * wl_listener, or wl_signal, provided via a callback or other means, and would
+ * like to retrieve the struct that contains it.
+ *
+ * To demonstrate, the following example retrieves a pointer to
+ * `example_container` given only its `destroy_listener` member:
+ *
+ * \code
+ * struct example_container {
+ *         struct wl_listener destroy_listener;
+ *         // other members...
+ * };
+ *
+ * void example_container_destroy(struct wl_listener *listener, void *data)
+ * {
+ *         struct example_container *ctr;
+ *
+ *         ctr = wl_container_of(listener, ctr, destroy_listener);
+ *         // destroy ctr...
+ * }
+ * \endcode
+ *
+ * \note `sample` need not be a valid pointer. A null or uninitialised pointer
+ *       is sufficient.
+ *
+ * \param ptr Valid pointer to the contained member
+ * \param sample Pointer to a struct whose type contains \p ptr
+ * \param member Named location of \p ptr within the \p sample type
+ *
+ * \return The container for the specified pointer
+ */
+#define wl_container_of(ptr, sample, member) \
+	(__typeof__(sample))((char *)(ptr)-offsetof(__typeof__(*sample), member))
+
 /** \class wl_signal
  *
  * \brief A source of a type of observable event
@@ -198,3 +236,15 @@ wl_priv_signal_get(struct wl_priv_signal *signal, wl_notify_func_t notify);
 void wl_priv_signal_emit(struct wl_priv_signal *signal, void *data);
 
 void wl_priv_signal_final_emit(struct wl_priv_signal *signal, void *data);
+
+int wl_interface_equal(const struct wl_interface *a, const struct wl_interface *b)
+{
+	/* In most cases the pointer equality test is sufficient.
+	 * However, in some cases, depending on how things are split
+	 * across shared objects, we can end up with multiple
+	 * instances of the interface metadata constants.  So if the
+	 * pointers match, the interfaces are equal, if they don't
+	 * match we have to compare the interface names.
+	 */
+	return a == b || strcmp(a->name, b->name) == 0;
+}

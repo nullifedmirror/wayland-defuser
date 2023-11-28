@@ -1,6 +1,6 @@
 pkgname=wayland-defuser
 pkgver=1
-pkgrel=1
+pkgrel=2
 pkgdesc='Makes Wayland go away (until it is usuable, aka never)'
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 license=('WTFPL')
@@ -10,9 +10,9 @@ makedepends=('gcc' 'gcc-libs')
 
 build() {
 	# Build the shared library that spoofs a Wayland client interface.
-	gcc -shared -w -o libwayland-client.so libwayland-client.c libwayland-list.c
+	gcc -shared -w -o libwayland-client.so libwayland-client.c libwayland-list.c libwayland-map.c
 	# Build the shared library that spoofs a Wayland server interface.
-	gcc -shared -w -o libwayland-server.so libwayland-server.c libwayland-list.c
+	gcc -shared -w -o libwayland-server.so libwayland-server.c libwayland-list.c libwayland-map.c
 	# Build the shared library that spoofs the Wayland cursor API.
 	gcc -shared -w -o libwayland-cursor.so libwayland-cursor.c
 	# Build the shared library that spoofs the Wayland EGL interface.
